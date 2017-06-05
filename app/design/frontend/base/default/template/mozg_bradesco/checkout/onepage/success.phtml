@@ -1,0 +1,104 @@
+<?php
+/**
+ * Copyright © 2016 Mozg. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+
+/*dump($this->getData());
+dump(get_class_methods(get_class($this)));
+dump(get_class_vars(get_class($this)));*/
+
+?>
+
+<!-- <?php echo get_class($this) ?> -->
+
+<script type="text/javascript">
+console.log('<?php echo get_class($this) ?>');
+</script>
+
+<?php if ($this->isCurrentMethod()): ?>
+
+    <div class="bradesco-checkout-onepage-success">
+
+        <?php if ($this->isBoletoPayment() || $this->isEletronicTransferPayment()): ?>
+            <div class="payment-url">
+                <?php 
+
+                $label_button = Mage::helper('mozg_bradesco')->__('Click here to process transaction');
+
+                echo Mage::helper('mozg_bradesco')->__('<button id="bradesco_transaction" type="submit" class="button" onclick="javascript:openPopupsMozg(\'%s\', \'WinXilinus\', \'Link\', \'Bradesco\', \'bradesco\');"><span><span>%s</span></span></button>', $this->getPaymentUrl(), $label_button);
+
+                ?>
+
+            </div>
+
+            <script type="text/javascript">
+
+            Event.observe (window, "load", function (event){
+                console.log('load');
+                console.log(event);
+                var target= 'target' in event ? event.target : event.srcElement;
+                console.log('clicked on '+target.tagName);
+
+                if($('bradesco_transaction')){
+                    window.location.href = "#bradesco_transaction";
+                    $('bradesco_transaction').click();
+                }
+
+            });
+
+            </script>
+        <?php endif; ?>
+
+        <?php /* ?>
+
+        <script type="text/javascript">
+
+        pre.show('Processando...');
+
+        </script>
+
+        <div id="ajax-mozg-success" style="border:1px solid red; display:none;">Aguarde o envio da notificação</div>
+
+        <script type="text/javascript">
+
+            var url = '<?php echo $this->getPaymentNotificationUrl(); ?>';
+
+            var element = 'ajax-mozg-success';
+
+            var req = new Ajax.Request( url, {
+                method: 'get',
+                asynchronous: false,
+                onLoading: function(transport) {
+                    console.log('onLoading');
+                },
+                onCreate: function(transport) {
+                    console.log('onCreate');            
+                },
+                onComplete: function(transport) {
+                    console.log('onComplete');
+                    
+                    //console.dir(transport);
+
+                    console.log('pre');
+
+                    console.log(pre);
+
+                    pre.hide();
+
+                    $(element).innerHTML = transport.responseText;
+                    
+                }
+            });
+
+            console.log(req);
+
+        </script>
+
+        <?php */ ?>
+
+    </div>
+
+<?php endif; ?>
+
+<!-- / <?php echo get_class($this) ?> -->

@@ -1,0 +1,43 @@
+<?php
+/**
+ * Copyright © 2016 Mozg. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+?>
+<?php echo $this->htmlEscape($this->getMethod()->getTitle()) ?><br/>
+<?php if ($_info = $this->getInfo()): ?>
+    <?php if ($_info->getMozgPspReference() == ''): ?>        
+        <?php echo Mage::helper('mozg_bradesco')->__('Payment has not been processed yet.') ?> <br/> 
+    <?php else :?>
+         <?php
+        $storeId = $this->getMethod()->getInfoInstance()->getOrder()->getStoreId();
+        if($this->getMethod()->getConfigDataDemoMode($storeId)): ?>
+
+        <?php else : ?>
+
+        <?php endif; ?>
+
+        <?php
+        $pspReference = $this->htmlEscape($_info->getMozgPspReference());
+        $url = Mage::helper('adminhtml')->getUrl('adminhtml/BradescoConsulta/', array('pspReference' => $pspReference) );
+        ?>
+        <?php echo Mage::helper('mozg_bradesco')->__('Bradesco PSP Reference: <a href="%s" target="_blank">%s</a>', $url, $pspReference) ?> <br/>
+
+    <?php endif;?>
+
+    <?php $eletronictransfer = unserialize($this->getInfo()->getPoNumber())?>
+
+	<?php echo Mage::helper('mozg_bradesco')->__('EletronicTransfer PDF: <a target="_blank" href="%s">Download</a>', $this->getInfo()->getOrder()->getMozgPaymentUrl()) ?><br/>
+    <?php if($_info->getMozgEletronicTransferPaidAmount() != null && $_info->getMozgEletronicTransferPaidAmount() != ""): ?>
+        <?php echo Mage::helper('mozg_bradesco')->__('Paid amount: %s', $this->htmlEscape($_info->getMozgEletronicTransferPaidAmount())) ?> <br/>
+    <?php endif; ?>
+    <?php if($this->htmlEscape($this->getInfo()->getMozgRefusalReasonRaw()) != ""): ?>
+        <?php echo Mage::helper('mozg_bradesco')->__('Raw acquirer response: %s', $this->htmlEscape($this->getInfo()->getMozgRefusalReasonRaw())) ?><br/>
+    <?php endif; ?>
+    <?php if($this->htmlEscape($this->getInfo()->getMozgAuthCode()) != ""): ?>
+        <?php echo Mage::helper('mozg_bradesco')->__('Authorisation code: %s', $this->htmlEscape($this->getInfo()->getMozgAuthCode())) ?><br/>
+    <?php endif; ?>
+    <?php if($this->htmlEscape($this->getInfo()->getMozgAcquirerReference()) != ""): ?>
+        <?php echo Mage::helper('mozg_bradesco')->__('Acquirer reference: %s', $this->htmlEscape($this->getInfo()->getMozgAcquirerReference())) ?><br/>
+    <?php endif; ?>
+<?php endif;?>
